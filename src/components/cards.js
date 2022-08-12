@@ -1,10 +1,11 @@
 import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
+
+import Container from "@mui/material/Container";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -37,6 +38,7 @@ const Cards = (props) => {
                     <Item sx={{ p: 0 }}>
                         <CardMedia
                             component="img"
+                            maxheight="300"
                             image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
                             alt={element.title}
                         />
@@ -57,11 +59,11 @@ const Cards = (props) => {
     console.log(content);
     return (
         // Creating a Container or box For the Data
-        <Box>
+        <Container maxWidth="xl">
             {/* Adding A grid to the box to add the cards(content) to it*/}
             {/* Looping over the data we got and creating boxes from that data */}
             {content}
-        </Box>
+        </Container>
     );
 };
 
