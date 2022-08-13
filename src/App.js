@@ -2,7 +2,7 @@ import Cards from "./components/cards";
 
 function App() {
     const data = [
-        { type: "bank-draft", title: "Bank Draft", position: 0 },
+        { type: "bank-draft", title: "Bank Draft", position: 5 },
         { type: "bill-of-lading", title: "Bill of Lading", position: 1 },
         { type: "invoice", title: "Invoice", position: 2 },
         { type: "bank-draft-2", title: "Bank Draft 2", position: 3 },
