@@ -4,7 +4,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Container from "@mui/material/Container";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -32,37 +32,61 @@ const Cards = (props) => {
     // width will be automatically given cause of flex properties
 
     let content = rowSplittedData.map((row, idx) => (
-        <Grid container spacing={2}>
-            {row.map((element) => (
-                <Grid key={idx} xs>
-                    <Item sx={{ p: 0 }}>
-                        <CardMedia
-                            component="img"
-                            maxheight="300"
-                            image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-                            alt={element.title}
-                        />
-                        <CardContent>
-                            <Typography
-                                gutterBottom
-                                variant="h5"
-                                component="div"
-                            >
-                                {element.title}
-                            </Typography>
-                        </CardContent>
-                    </Item>
+        <Droppable key={idx} droppableId="droppable">
+            {(provided) => (
+                <Grid
+                    key={idx}
+                    className="droppable"
+                    container
+                    spacing={2}
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                >
+                    {row.map((element, index) => (
+                        <Draggable
+                            key={element.type}
+                            draggableId={element.type}
+                            index={index}
+                        >
+                            {(provided) => (
+                                <Grid
+                                    key={element.type}
+                                    xs
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                >
+                                    <Item sx={{ p: 0 }} key={element.type}>
+                                        <CardMedia
+                                            component="img"
+                                            maxheight="300"
+                                            image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+                                            alt={element.title}
+                                        />
+                                        <CardContent>
+                                            <Typography
+                                                gutterBottom
+                                                variant="h5"
+                                                component="div"
+                                            >
+                                                {element.title}
+                                            </Typography>
+                                        </CardContent>
+                                    </Item>
+                                </Grid>
+                            )}
+                        </Draggable>
+                    ))}
                 </Grid>
-            ))}
-        </Grid>
+            )}
+        </Droppable>
     ));
-    console.log(content);
     return (
         // Creating a Container or box For the Data
         <Container maxWidth="xl">
             {/* Adding A grid to the box to add the cards(content) to it*/}
             {/* Looping over the data we got and creating boxes from that data */}
-            {content}
+            <DragDropContext>{content}</DragDropContext>
         </Container>
     );
 };
