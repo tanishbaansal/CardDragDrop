@@ -32,7 +32,12 @@ const CardImage = (props) => {
             its loaded we set loading as false */}
 
             <img
-                style={{ maxWidth: "100%", display: loading ? "none" : "flex" }}
+                style={{
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                    width: "50vw",
+                    display: loading ? "none" : "flex",
+                }}
                 key={imgUrls[props.index]}
                 src={imgUrls[props.index]}
                 onLoad={() => setLoading(false)}

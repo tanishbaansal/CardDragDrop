@@ -1,19 +1,9 @@
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Container from "@mui/material/Container";
 import React, { useState } from "react";
 import CardDetails from "./cardDetails";
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-}));
-
 const Cards = (props) => {
     // when we move our items, they move using beautiful dnd but
     // after we drop them they go to original state so for that we use
@@ -64,14 +54,13 @@ const Cards = (props) => {
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                 >
-                                    <Item sx={{ p: 0 }} key={element.type}>
-                                        {/* Made A component for getting the card details */}
-                                        {/* and also showing loading animation till image loads */}
-                                        <CardDetails
-                                            title={element.title}
-                                            index={idx * 3 + index}
-                                        />
-                                    </Item>
+                                    {/* Adding a image modal on Box Click */}
+                                    {/* Made A component for getting the card details */}
+                                    {/* and also showing loading animation till image loads */}
+                                    <CardDetails
+                                        title={element.title}
+                                        index={idx * 3 + index}
+                                    />
                                 </Grid>
                             )}
                         </Draggable>
