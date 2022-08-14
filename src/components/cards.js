@@ -88,17 +88,15 @@ const Cards = (props) => {
         const destinationRowIndex = +destination.droppableId;
         const sourceIndex = result.source.index;
         const destinationIndex = result.destination.index;
-
         const newState = [...items];
-        console.log(
-            `Index Row - source ${sourceRowIndex} , destination - ${destinationRowIndex}`
-        );
-        console.log(
-            `Index Column - source ${sourceIndex} , destination - ${destinationIndex}`
-        );
-        console.log(
-            `SourceRowIndex - ${sourceRowIndex} , ${rowSplittedData[sourceRowIndex].length}`
-        );
+
+        // Source Position is calculated based on the position of the source item which we are moving
+        // so for calculating its position we need the row length of the previous array
+        // we need the previous row length so that we can multiply it with the items RowIndex and adding the index of that element
+        // we will get the source position for ex. if we are moving first element from second row so its row index will be 1
+        // and column index will be 0 but in the array of data its position will be 4 and index 3 as first row will contain 3 items
+        // so we will need the previous row length to calculate this so we can get
+        // 3(previous row items length) + 1(current element comes first in second row)
         let sourcePosition =
             sourceRowIndex *
                 rowSplittedData[
@@ -113,9 +111,8 @@ const Cards = (props) => {
                         : destinationRowIndex
                 ].length +
             destinationIndex;
-        console.log(
-            `sourcePosition ${sourcePosition} , destinationPosition - ${destinationPosition}`
-        );
+
+        // Calculating the newstate and updating the position of every element in datalist
         newState.forEach((element) => {
             if (element["position"] === sourcePosition) {
                 element["position"] = destinationPosition;
