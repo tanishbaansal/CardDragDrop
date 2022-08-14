@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import CardImage from "./Utils/cardImage";
+import CardImage from "./helpers/cardImage";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import { useState } from "react";

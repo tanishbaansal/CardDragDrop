@@ -2,6 +2,7 @@ import React from "react";
 import { CircularProgress } from "@mui/material";
 import { useState } from "react";
 import CardContent from "@mui/material/CardContent";
+import cardImageUrls from "./cardImageUrls";
 
 const CardImage = (props) => {
     // Using states to check whether the image is still loading or not

@@ -4,12 +4,13 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Container from "@mui/material/Container";
 import React, { useState } from "react";
 import CardDetails from "./cardDetails";
+import cardImageUrls from "./helpers/cardImageUrls";
 const Cards = (props) => {
     // when we move our items, they move using beautiful dnd but
     // after we drop them they go to original state so for that we use
     // react state to make them state at updated place.
     const [items, updateItems] = useState(props.data);
-
+    console.log(`Prop item - ${JSON.stringify(items)}`);
     // First to distribute the content over different rows we
     // calculate the total number of rows we need and split the data
     // accordingly
@@ -17,6 +18,7 @@ const Cards = (props) => {
 
     //Sorting the data based on the position of the item in the list
     const sortData = items.sort((a, b) => a.position - b.position);
+    console.log(`Sort item - ${JSON.stringify(sortData)}`);
 
     // chunk the data into the array of rows
     const rowSplittedData = rows.map((row, idx) =>
@@ -25,6 +27,7 @@ const Cards = (props) => {
 
     console.log(JSON.stringify(rowSplittedData, null, "\t"));
 
+    const mappedImages = cardImageUrls(props.data);
     // Created a variable to loop over the splitted chunk of data
     // and adding the data item to the grid
     // So this will allow us to split the data into groups of 3 and
@@ -60,7 +63,7 @@ const Cards = (props) => {
                                     {/* and also showing loading animation till image loads */}
                                     <CardDetails
                                         element={element}
-                                        imgUrl={props.images[element.type]}
+                                        imgUrl={mappedImages[element.type]}
                                     />
                                 </Grid>
                             )}
