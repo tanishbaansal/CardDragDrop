@@ -97,21 +97,35 @@ const Cards = (props) => {
         // and column index will be 0 but in the array of data its position will be 4 and index 3 as first row will contain 3 items
         // so we will need the previous row length to calculate this so we can get
         // 3(previous row items length) + 1(current element comes first in second row)
+        let sourcePreviousRowLength =
+            rowSplittedData[
+                sourceRowIndex > 0 ? sourceRowIndex - 1 : sourceRowIndex
+            ].length;
+        let destinationPreviousRowLength =
+            rowSplittedData[
+                destinationRowIndex > 0
+                    ? destinationRowIndex - 1
+                    : destinationRowIndex
+            ].length;
         let sourcePosition =
-            sourceRowIndex *
-                rowSplittedData[
-                    sourceRowIndex > 0 ? sourceRowIndex - 1 : sourceRowIndex
-                ].length +
-            sourceIndex;
+            sourceRowIndex * sourcePreviousRowLength + sourceIndex;
         let destinationPosition =
-            destinationRowIndex *
-                rowSplittedData[
-                    destinationRowIndex > 0
-                        ? destinationRowIndex - 1
-                        : destinationRowIndex
-                ].length +
+            destinationRowIndex * destinationPreviousRowLength +
             destinationIndex;
+        console.log(`Source Item (${sourceIndex},${sourceRowIndex})`);
+        console.log(
+            `Destination Item (${destinationIndex},${destinationRowIndex})`
+        );
+        console.log(
+            `sourcePosition ${sourcePosition} , destinationPosition - ${destinationPosition}`
+        );
 
+        //There's an edge case where if we drag an element to the edge of the other row where
+        // there are only 2 element then the destination position will get an extra 1 index
+        // so to fix that we need this below if condition
+        if (destinationPosition >= props.data.length) {
+            destinationPosition -= 1;
+        }
         // Calculating the newstate and updating the position of every element in datalist
         newState.forEach((element) => {
             if (element["position"] === sourcePosition) {
@@ -140,20 +154,14 @@ const Cards = (props) => {
             ) {
                 element["position"] += 1;
             }
-            // else {
-            //     element["position"] += 1;
-            // }
         });
         updateItems(newState);
     };
 
     return (
-        // Creating a Container or box For the Data
-
-        <Container maxWidth="xl">
-            {/* Adding A grid to the box to add the cards(content) to it*/}
-            {/* Looping over the data we got and creating boxes from that data */}
-            {/* and also adding the drag and drop functionality with a */}
+        // Creating a Container For the Data
+        <Container maxWidth="md">
+            {/* adding the drag and drop functionality with a */}
             {/* onDragEnd event listener to run a function to save state  */}
             {/* whenever we drag and drop the element somewhere */}
             <DragDropContext onDragEnd={handleOnDragEnd}>
