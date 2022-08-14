@@ -1,8 +1,5 @@
-import React from "react";
-import { CircularProgress } from "@mui/material";
 import { useState } from "react";
-import CardContent from "@mui/material/CardContent";
-import cardImageUrls from "./cardImageUrls";
+import Loader from "../extraUtils/loader";
 
 const CardImage = (props) => {
     // Using states to check whether the image is still loading or not
@@ -10,16 +7,7 @@ const CardImage = (props) => {
 
     return (
         <>
-            <CardContent
-                sx={{
-                    aspectRatio: "1/1",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-                style={{ display: loading ? "flex" : "none" }}
-            >
-                <CircularProgress />
-            </CardContent>
+            <Loader style={{ display: loading ? "flex" : "none" }} />
 
             {/* // using a function onLoad to check whether image is loaded or not after
             its loaded we set loading as false */}

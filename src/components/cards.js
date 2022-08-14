@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Container from "@mui/material/Container";
 import React, { useState } from "react";
 import CardDetails from "./cardDetails";
-import cardImageUrls from "./helpers/cardImageUrls";
+import cardImageUrls from "./cardUtils/cardImageUrls";
 const Cards = (props) => {
     // when we move our items, they move using beautiful dnd but
     // after we drop them they go to original state so for that we use
@@ -18,15 +18,13 @@ const Cards = (props) => {
 
     //Sorting the data based on the position of the item in the list
     const sortData = items.sort((a, b) => a.position - b.position);
-    console.log(`Sort item - ${JSON.stringify(sortData)}`);
 
     // chunk the data into the array of rows
     const rowSplittedData = rows.map((row, idx) =>
         sortData.slice(idx * 3, idx * 3 + 3)
     );
 
-    console.log(JSON.stringify(rowSplittedData, null, "\t"));
-
+    //Mapping images to card Types
     const mappedImages = cardImageUrls(props.data);
     // Created a variable to loop over the splitted chunk of data
     // and adding the data item to the grid

@@ -1,30 +1,31 @@
 import Cards from "./components/cards";
-import FetchData from "./components/helpers/fetchData";
 import { useState, useEffect } from "react";
-import { CircularProgress } from "@mui/material";
+import { fetchData } from "./components/extraUtils/fetchData";
+import Loader from "./components/extraUtils/loader";
+
 const App = () => {
     const [data, setData] = useState(undefined);
-
-    const fetchData = async () => {
-        const response = await fetch("http://localhost:8080/data");
-        const data = await response.json();
-        setData(data);
+    const callFetchData = async () => {
+        setData(await fetchData());
     };
-
     useEffect(() => {
-        fetchData();
+        callFetchData();
     }, []);
 
+    // Function to check if the data is fetched from the API endpoint or not
+    // and if not then show a loading animation
     if (data === undefined) {
         return (
-            <>
-                <CircularProgress />
-                Fetching Data From Api
-            </>
+            <Loader
+                extraStyles={{
+                    display: "flex",
+                    width: "100vw",
+                    height: "80vh",
+                    flexFlow: "column",
+                }}
+            />
         );
     }
-
-    console.log(`Data is - ${JSON.stringify(data)}`);
 
     return <Cards data={data} />;
 };

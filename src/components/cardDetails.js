@@ -1,10 +1,12 @@
 import Typography from "@mui/material/Typography";
-import CardImage from "./helpers/cardImage";
+import CardImage from "./cardUtils/cardImage";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import { useState } from "react";
 import Modal from "@mui/material/Modal";
 import { Grid } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
+import Fade from "@mui/material/Fade";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "#fff",
@@ -20,20 +22,22 @@ const CardDetails = (props) => {
     const handleClose = () => setOpen(false);
     return (
         <>
-            <Modal open={open} onClose={handleClose}>
-                <Grid
-                    container
-                    sx={{
-                        justifyContent: "center",
-                        alignContent: "center",
-                        height: "100vh",
-                    }}
-                >
-                    <CardImage
-                        type={props.element.type}
-                        imgUrl={props.imgUrl}
-                    />
-                </Grid>
+            <Modal open={open} onClose={handleClose} closeAfterTransition>
+                <Fade in={open}>
+                    <Grid
+                        container
+                        sx={{
+                            justifyContent: "center",
+                            alignContent: "center",
+                            height: "100vh",
+                        }}
+                    >
+                        <CardImage
+                            type={props.element.type}
+                            imgUrl={props.imgUrl}
+                        />
+                    </Grid>
+                </Fade>
             </Modal>
             <Item sx={{ p: 0 }} key={props.element.type} onClick={handleOpen}>
                 <CardImage type={props.element.type} imgUrl={props.imgUrl} />

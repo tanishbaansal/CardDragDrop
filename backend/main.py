@@ -1,4 +1,5 @@
 
+from pstats import Stats
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
@@ -20,59 +21,58 @@ def connectDb():
         password="carddragdrop"
     )
 
-# Creating a function to add new data to the cat Table
 
-
-def addDataInDb(type, title, position):
+def dbOperations(type, sqlQuery):
     try:
-        sqlQuery = f"INSERT INTO catData(type,title,position) VALUES('{type}','{title}','{position}')"
+        sqlQuery = sqlQuery
         # declare a cursor object from the connection
         conn = connectDb()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         # execute the INSERT statement
         cursor.execute(sqlQuery)
-        # add the data to the postgressql database
-        conn.commit()
+
+        print(f'executed query')
+        if(type == "insert" or type == "update"):
+            # add the data to the postgressql database
+            conn.commit()
+            result = "SUCCESS"
+        if(type == "select"):
+            result = cursor.fetchall()
         # close communication with the database
         conn.close()
-        return "SUCCESS"
+        return result
     except (Exception) as error:
-        print(error)
-        return "FAILURE"
+        return error
     finally:
         if conn is not None:
             conn.close()
 
 
-def getDataFromDb():
-    # Retrieve all the data from catTable
-    sqlQuery = "SELECT * FROM catData"
-    conn = connectDb()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    # execute the Select statement
-    cursor.execute(sqlQuery)
-    catData = cursor.fetchall()
-    # close communication with the database
-    conn.close()
-    return catData
-
-
 def getData(request):
-    print(f'Get data - {getDataFromDb()}')
-    return JSONResponse(getDataFromDb())
+    return JSONResponse(dbOperations("select", "SELECT * FROM catData"))
 
 
 async def addData(request):
     jsondata = await request.json()
     print(f'Request Data {jsondata}')
-    status = addDataInDb(
-        jsondata['type'], jsondata['title'], jsondata['position'])
+    status = dbOperations(
+        "insert", f"INSERT INTO catData(type,title,position) VALUES('{ jsondata['type']}','{jsondata['title']}','{ jsondata['position']}')")
+    return JSONResponse({'status': status})
+
+
+async def updateData(request):
+    jsondata = await request.json()
+    print(f'Request Data {jsondata}')
+    status = dbOperations(
+        "update", f"UPDATE catData SET position = {jsondata['position']} WHERE type = '{jsondata['type']}'")
+    print(f'This status = {status}')
     return JSONResponse({'status': status})
 
 
 routes = [
     Route('/data', getData),
-    Route('/data', addData, methods=['POST'])
+    Route('/insertdata', addData, methods=['POST']),
+    Route('/updatedata', updateData, methods=['PUT'])
 ]
 middleware = [
     Middleware(CORSMiddleware, allow_origins=['*'])

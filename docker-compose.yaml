@@ -6,6 +6,8 @@ services:
       - "8080:80"
   db:
     image: postgres:14.1-alpine
+    # Adding this to update the conf file of postgres so it can be used to get the last updated timestamp of table
+    command: postgres -c track_commit_timestamp=true
     restart: always
     environment:
       - POSTGRES_USER=admin
