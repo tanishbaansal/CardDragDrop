@@ -29,13 +29,16 @@ const CardDetails = (props) => {
                         height: "100vh",
                     }}
                 >
-                    <CardImage title={props.title} index={props.index} />
+                    <CardImage
+                        type={props.element.type}
+                        imgUrl={props.imgUrl}
+                    />
                 </Grid>
             </Modal>
-            <Item sx={{ p: 0 }} key={props.title} onClick={handleOpen}>
-                <CardImage title={props.title} index={props.index} />
+            <Item sx={{ p: 0 }} key={props.element.type} onClick={handleOpen}>
+                <CardImage type={props.element.type} imgUrl={props.imgUrl} />
                 <Typography sx={{ p: 3 }} variant="h5" component="div">
-                    {props.title}
+                    {props.element.title}
                 </Typography>
             </Item>
         </>

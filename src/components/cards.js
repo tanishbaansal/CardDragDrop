@@ -23,7 +23,8 @@ const Cards = (props) => {
         sortData.slice(idx * 3, idx * 3 + 3)
     );
 
-    console.log(rowSplittedData);
+    console.log(JSON.stringify(rowSplittedData, null, "\t"));
+
     // Created a variable to loop over the splitted chunk of data
     // and adding the data item to the grid
     // So this will allow us to split the data into groups of 3 and
@@ -31,7 +32,7 @@ const Cards = (props) => {
     // width will be automatically given cause of flex properties
 
     let content = rowSplittedData.map((row, idx) => (
-        <Droppable key={idx} droppableId={`${idx}`}>
+        <Droppable key={idx} droppableId={`${idx}`} direction="horizontal">
             {(provided) => (
                 <Grid
                     key={idx}
@@ -58,8 +59,8 @@ const Cards = (props) => {
                                     {/* Made A component for getting the card details */}
                                     {/* and also showing loading animation till image loads */}
                                     <CardDetails
-                                        title={element.title}
-                                        index={idx * 3 + index}
+                                        element={element}
+                                        imgUrl={props.images[element.type]}
                                     />
                                 </Grid>
                             )}
@@ -95,19 +96,60 @@ const Cards = (props) => {
         console.log(
             `Index Column - source ${sourceIndex} , destination - ${destinationIndex}`
         );
-        let sourcePosition = sourceIndex * 3 + sourceRowIndex;
-        let destinationPosition = destinationRowIndex * 3 + destinationIndex;
+        console.log(
+            `SourceRowIndex - ${sourceRowIndex} , ${rowSplittedData[sourceRowIndex].length}`
+        );
+        let sourcePosition =
+            sourceRowIndex *
+                rowSplittedData[
+                    sourceRowIndex > 0 ? sourceRowIndex - 1 : sourceRowIndex
+                ].length +
+            sourceIndex;
+        let destinationPosition =
+            destinationRowIndex *
+                rowSplittedData[
+                    destinationRowIndex > 0
+                        ? destinationRowIndex - 1
+                        : destinationRowIndex
+                ].length +
+            destinationIndex;
+        console.log(
+            `sourcePosition ${sourcePosition} , destinationPosition - ${destinationPosition}`
+        );
         newState.forEach((element) => {
             if (element["position"] === sourcePosition) {
                 element["position"] = destinationPosition;
-            } else if (element["position"] > destinationPosition) {
-                element["position"] += 1;
-            } else {
+            }
+            // the case where the element is between source and destination so it
+            // needs to be positioned one step back
+            // Or if the element is at the destination so it needs to
+            // be pushed back too
+            else if (
+                sourcePosition < destinationPosition &&
+                ((element["position"] < destinationPosition &&
+                    element["position"] > sourcePosition) ||
+                    element["position"] === destinationPosition)
+            ) {
                 element["position"] -= 1;
             }
+            // There's a case when the destination is less than sourcePosition
+            // i.e we are moving the element from right to left so in that case
+            // we have to increase the position of the right item
+            else if (
+                sourcePosition > destinationPosition &&
+                ((element["position"] > destinationPosition &&
+                    element["position"] < sourcePosition) ||
+                    element["position"] === destinationPosition)
+            ) {
+                element["position"] += 1;
+            }
+            // else {
+            //     element["position"] += 1;
+            // }
         });
         updateItems(newState);
     };
+
     return (
         // Creating a Container or box For the Data
 
