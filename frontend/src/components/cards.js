@@ -1,16 +1,21 @@
 import Grid from "@mui/material/Unstable_Grid2";
-
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Container from "@mui/material/Container";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CardDetails from "./cardDetails";
-import cardImageUrls from "./cardUtils/cardImageUrls";
+import CardSave from "./cardUtils/cardSave";
+import dataDiffChecker from "./extraUtils/dataDiffChecker";
+import { fetchLastSaveData } from "./extraUtils/fetchData";
+import LoaderBackdrop from "./extraUtils/loaderBackdrop";
+
 const Cards = (props) => {
     // when we move our items, they move using beautiful dnd but
     // after we drop them they go to original state so for that we use
     // react state to make them state at updated place.
     const [items, updateItems] = useState(props.data);
-    console.log(`Prop item - ${JSON.stringify(items)}`);
+    const [saving, setSaving] = useState(false);
+    const [lastSaveDate, setLastSaveDate] = useState(null);
+    // console.log(`Prop item - ${JSON.stringify(items)}`);
     // First to distribute the content over different rows we
     // calculate the total number of rows we need and split the data
     // accordingly
@@ -24,8 +29,38 @@ const Cards = (props) => {
         sortData.slice(idx * 3, idx * 3 + 3)
     );
 
-    //Mapping images to card Types
-    const mappedImages = cardImageUrls(props.data);
+    const intervalTime = 5000; // Card Update Save every 5 seconds
+
+    // Effect hook to check after set intervalTime whether the data is changed or not
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            // function call to check whether the items are updated or not
+            let changedData = await dataDiffChecker(items);
+
+            // if items are updated so we will get back changedData as an array of items that are changed
+            if (changedData.length > 0) {
+                // Starting the saving process to the DB so setting saving variable as true so we can show a backdrop & loader
+                setSaving(true);
+
+                //function to get the last save date
+                let lastSaveDate = await fetchLastSaveData();
+                setLastSaveDate(lastSaveDate["time"]);
+
+                // function to save the card details to db
+                let updateData = await CardSave(changedData);
+                if (updateData) {
+                    //setting saving as false after the data has been successfully updated in the DB
+                    setSaving(false);
+                }
+            }
+        }, intervalTime);
+
+        return () => clearInterval(interval); // This is the unmount feature which is used to clear the interval to prevent memory leaks.
+    }, [items]);
+
+    // Mapping images to card Types (NOT USING RIGHT NOW - using the images for the database functionality)
+    // const mappedImages = cardImageUrls(props.data);
+
     // Created a variable to loop over the splitted chunk of data
     // and adding the data item to the grid
     // So this will allow us to split the data into groups of 3 and
@@ -61,7 +96,7 @@ const Cards = (props) => {
                                     {/* and also showing loading animation till image loads */}
                                     <CardDetails
                                         element={element}
-                                        imgUrl={mappedImages[element.type]}
+                                        // imgUrl={mappedImages[element.type]}
                                     />
                                 </Grid>
                             )}
@@ -162,6 +197,11 @@ const Cards = (props) => {
     return (
         // Creating a Container For the Data
         <Container maxWidth="md">
+            {/* A backdrop with loader to be shown only when saving is on */}
+            <LoaderBackdrop
+                style={{ display: saving ? "flex" : "none" }}
+                lastSaveDate={lastSaveDate}
+            />
             {/* adding the drag and drop functionality with a */}
             {/* onDragEnd event listener to run a function to save state  */}
             {/* whenever we drag and drop the element somewhere */}

@@ -5,7 +5,6 @@ import Paper from "@mui/material/Paper";
 import { useState } from "react";
 import Modal from "@mui/material/Modal";
 import { Grid } from "@mui/material";
-import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -34,13 +33,16 @@ const CardDetails = (props) => {
                     >
                         <CardImage
                             type={props.element.type}
-                            imgUrl={props.imgUrl}
+                            imgUrl={props.element.imgurl}
                         />
                     </Grid>
                 </Fade>
             </Modal>
             <Item sx={{ p: 0 }} key={props.element.type} onClick={handleOpen}>
-                <CardImage type={props.element.type} imgUrl={props.imgUrl} />
+                <CardImage
+                    type={props.element.type}
+                    imgUrl={props.element.imgurl}
+                />
                 <Typography sx={{ p: 3 }} variant="h5" component="div">
                     {props.element.title}
                 </Typography>

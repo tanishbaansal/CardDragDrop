@@ -8,6 +8,8 @@ const App = () => {
     const callFetchData = async () => {
         setData(await fetchData());
     };
+
+    //Fetching data from DB once the page renders
     useEffect(() => {
         callFetchData();
     }, []);

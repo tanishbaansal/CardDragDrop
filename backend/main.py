@@ -48,6 +48,12 @@ def dbOperations(type, sqlQuery):
             conn.close()
 
 
+def getLastSaveData(request):
+    lastSaveTime = (str((dbOperations("select", "SELECT pg_xact_commit_timestamp(t.xmin) AS modified_ts FROM catData t ORDER  BY modified_ts DESC NULLS LAST LIMIT  1;"))[
+        0]['modified_ts'].strftime("%d %B, %H:%M:%S")))
+    return JSONResponse({"time": lastSaveTime})
+
+
 def getData(request):
     return JSONResponse(dbOperations("select", "SELECT * FROM catData"))
 
@@ -71,11 +77,15 @@ async def updateData(request):
 
 routes = [
     Route('/data', getData),
+    Route('/getlastsavedata', getLastSaveData),
     Route('/insertdata', addData, methods=['POST']),
     Route('/updatedata', updateData, methods=['PUT'])
 ]
 middleware = [
-    Middleware(CORSMiddleware, allow_origins=['*'])
+    Middleware(CORSMiddleware, allow_origins=["*"],  # Allows all origins
+               allow_credentials=True,
+               allow_methods=["*"],  # Allows all methods
+               allow_headers=["*"])
 ]
 
 app = Starlette(routes=routes, middleware=middleware)

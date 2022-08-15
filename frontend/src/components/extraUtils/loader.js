@@ -11,7 +11,7 @@ const Loader = (props) => {
                 }}
                 style={props.style}
             >
-                <CircularProgress sx={{ p: 2 }} />
+                <CircularProgress color={props.color} sx={{ p: 2 }} />
             </CardContent>
         </>
     );
