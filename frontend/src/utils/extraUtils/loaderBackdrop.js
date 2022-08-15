@@ -4,7 +4,7 @@ import Loader from "./loader";
 
 const LoaderBackdrop = (props) => {
     return (
-        <Fade in={true}>
+        <Fade in={true} style={{ transition: "all 1s ease-in-out" }}>
             <Backdrop
                 open={true}
                 sx={{

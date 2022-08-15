@@ -1,4 +1,4 @@
-import { fetchData } from "../extraUtils/fetchData";
+import { fetchData } from "./fetchData";
 
 const dataDiffChecker = async (newData) => {
     //Check if data is updated
@@ -8,7 +8,7 @@ const dataDiffChecker = async (newData) => {
     // data and check if the position of a particular type is changed in the new data
     const changedData = newData.filter((element) => {
         return (
-            oldData.find((item) => item.type == element.type).position !=
+            oldData.find((item) => item.type === element.type).position !==
             element.position
         );
     });

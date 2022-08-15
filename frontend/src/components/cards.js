@@ -3,10 +3,10 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Container from "@mui/material/Container";
 import React, { useEffect, useState } from "react";
 import CardDetails from "./cardDetails";
-import CardSave from "./cardUtils/cardSave";
-import dataDiffChecker from "./extraUtils/dataDiffChecker";
-import { fetchLastSaveData } from "./extraUtils/fetchData";
-import LoaderBackdrop from "./extraUtils/loaderBackdrop";
+import CardSave from "./../utils/cardUtils/cardSave";
+import dataDiffChecker from "./../utils/extraUtils/dataDiffChecker";
+import { fetchLastSaveData } from "./../utils/extraUtils/fetchData";
+import LoaderBackdrop from "./../utils/extraUtils/loaderBackdrop";
 
 const Cards = (props) => {
     // when we move our items, they move using beautiful dnd but
