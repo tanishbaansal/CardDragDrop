@@ -1,6 +1,6 @@
 # Card Drag And Drop App
 
-![App](https://i.imgur.com/p0rubKx.png)
+![App](https://media2.giphy.com/media/ZgKlp454DjH8WcZOLe/giphy.gif)
 
 A React project which has multiple elements in a grid with the functionality of drag and drop. You can easily drag and drop the tiles of items wherever you want in the grid and the grid will adjust based on that. Using PostgresSQL DB as the database to store the item's position and structure. Using uvicorn-gunicorn-starlette API framework as the backend to make REST API endpoints to fetchData, Insert, Update DB.
 
