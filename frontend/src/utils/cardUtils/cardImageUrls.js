@@ -1,4 +1,4 @@
-import React from "react";
+// This Util file is not used as we are saving the urls in the db itself
 
 const cardImageUrls = (data) => {
     const imgUrls = [

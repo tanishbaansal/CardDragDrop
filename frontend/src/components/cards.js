@@ -11,14 +11,17 @@ import LoaderBackdrop from "./../utils/extraUtils/loaderBackdrop";
 const Cards = (props) => {
     // when we move our items, they move using beautiful dnd but
     // after we drop them they go to original state so for that we use
-    // react state to make them state at updated place.
+    // react state to make them stay at updated place.
     const [items, updateItems] = useState(props.data);
+
+    // variable to get Whether the page is saving or not
     const [saving, setSaving] = useState(false);
+
+    //variable to get lastsavedate
     const [lastSaveDate, setLastSaveDate] = useState(null);
-    // console.log(`Prop item - ${JSON.stringify(items)}`);
+
     // First to distribute the content over different rows we
-    // calculate the total number of rows we need and split the data
-    // accordingly
+    // calculate the total number of rows we need and split the data accordingly
     const rows = [...Array(Math.ceil(items.length / 3))];
 
     //Sorting the data based on the position of the item in the list
@@ -29,7 +32,7 @@ const Cards = (props) => {
         sortData.slice(idx * 3, idx * 3 + 3)
     );
 
-    const intervalTime = 5000; // Card Update Save every 5 seconds
+    const intervalTime = parseInt(process.env.REACT_APP_TESTING_TIME); // Card Update Save every 5 seconds
 
     // Effect hook to check after set intervalTime whether the data is changed or not
     useEffect(() => {
@@ -55,14 +58,13 @@ const Cards = (props) => {
             }
         }, intervalTime);
 
-        return () => clearInterval(interval); // This is the unmount feature which is used to clear the interval to prevent memory leaks.
-    }, [items]);
+        return () => clearInterval(interval); // Unmount feature which is used to clear the interval to prevent memory leaks.
+    }, [items, intervalTime]);
 
-    // Mapping images to card Types (NOT USING RIGHT NOW - using the images for the database functionality)
+    // Mapping images to card Types (NOT USING RIGHT NOW - using the images from the database functionality)
     // const mappedImages = cardImageUrls(props.data);
 
-    // Created a variable to loop over the splitted chunk of data
-    // and adding the data item to the grid
+    // Created a variable to loop over the splitted chunk of data and adding the data item to the grid
     // So this will allow us to split the data into groups of 3 and
     // distributing the size of box based on that like for 2, 50-50%
     // width will be automatically given cause of flex properties
@@ -148,13 +150,6 @@ const Cards = (props) => {
         let destinationPosition =
             destinationRowIndex * destinationPreviousRowLength +
             destinationIndex;
-        console.log(`Source Item (${sourceIndex},${sourceRowIndex})`);
-        console.log(
-            `Destination Item (${destinationIndex},${destinationRowIndex})`
-        );
-        console.log(
-            `sourcePosition ${sourcePosition} , destinationPosition - ${destinationPosition}`
-        );
 
         //There's an edge case where if we drag an element to the edge of the other row where
         // there are only 2 element then the destination position will get an extra 1 index

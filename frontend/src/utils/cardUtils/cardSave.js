@@ -13,8 +13,7 @@ const CardSave = async (changedData) => {
             return new Promise((resolve) => setTimeout(resolve, ms));
         }
         async function testSleep() {
-            console.log("sleeping for some time after update");
-            await sleep(1000);
+            await sleep(5000);
         }
         await testSleep();
     }
