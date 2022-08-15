@@ -1,6 +1,5 @@
 # Card Drag And Drop App
 
-![]()
 <p align="center">
   <img width="600" height="620" src="https://i.imgur.com/7gu7vHY.gif">
 </p>
