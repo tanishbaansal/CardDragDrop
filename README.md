@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+# Card Drag And Drop App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React project which has multiple elements in a grid with the functionality of drag and drop. You can easily drag and drop the tiles of items wherever you want in the grid and the grid will adjust based on that. Using PostgresSQL DB as the database to store the item's position and structure. Using uvicorn-gunicorn-starlette API framework as the backend to make REST API endpoints to fetchData, Insert, Update DB.
 
-## Available Scripts
+# HOW TO RUN
+1. simply clone it using - `git clone https://github.com/tanishbaansal/CardDragDrop.git`
+2. run docker compose command - `docker compose up`
+3. Open the frontend on `http://localhost:3000/`
 
-In the project directory, you can run:
+:fire: Voila, that's it
 
-### `npm start`
+# For Testing
+There's a .env.testing file in the frontend folder which contains the testing variables.
+To check the saving screen which appears when you move items in the grid and data saves, just set REACT_APP_TESTING_MODE="true" as updation is pretty quick so implemented a sleep to make the function sleep for some time after updating so we can see the saving screen.
+Set REACT_APP_TESTING_TIME to change the interval of time in ms when the app should save the data.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# After Changes
+if doing any changes to the frontend or backend files after doing `docker compose up` be sure to run `docker compose down` and on the next run use `docker compose up --build` to rebuild the image with updated code
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Architectural / API design
+The backend core logic was to 
+-Fetch the data from the DB to get the list of items 
+-Update the data whenever the user moves the elements in the grid
+-Fetch the last time the data was saved
 
-### `npm test`
+To do that we just need to create a simple REST API server, with the following endpoints 
+- `/data` - Which will fetch the data from DB  using the `GET` method
+- `/getlastsavedata` - To get the exact time when the last save was done
+- `/updatedata` - To update the data using the `PUT` method
+and also created one more endpoint `/insertdata` to insert new items into the DB using the `POST` method .
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Hypothetical API for this project 
+1. For Adding - Already created a `/insertdata` endpoint which does the job of adding new elements to the DB. It takes in all the input in JSON data and adds it to the table.
+2. For Removing - will be creating a `/deletedata` endpoint with DELETE method which will require a request containing a JSON object with the item's type to uniquely identify the item and remove that from the table using a Delete query using the where clause.
+3. For Updating - Already created a `/updatedata` endpoint which gets the type and position of the element and updates the position of the element with the given data.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Allowing multiple users to edit the board at the same time
+For allowing multiple users to edit the board at the same time we would require a state management library like SyncState which would help us in syncing the state across multiple sessions also we will have to incorporate a framework server that supports real-time data transfer like socket.io or firebase so we create a Socket connection between client and server so that data will flow both ways. So when two users open the app the data/state will be fetched from the remote connection and if one user updates anything on the page then in real time that state/data flows to the remote connection like the socket.io database and the other user's App will fetch that newly updated data from the connected socket.io connection and update its state. So this will create an editable multiple users board.
